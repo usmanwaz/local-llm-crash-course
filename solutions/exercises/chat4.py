@@ -18,7 +18,7 @@ def get_prompt(instruction: str, history: List[str] = None) -> str:
     system = "You are an AI assistant that gives helpful answers. You answer the question in a short and concise way."
     prompt = f"### System:\n{system}\n\n### User:\n"
     if history is not None:
-        prompt += f"Thisis the conversation history: {''.join(history)}. Now answer the question: "
+        prompt += f"This is the conversation history so far: {''.join(history)} Now answer the question: "
     prompt += f"{instruction}\n\n### Response:\n"
     print(prompt)
     return prompt
@@ -26,7 +26,7 @@ def get_prompt(instruction: str, history: List[str] = None) -> str:
 
 history = []
 
-question = "What is the best tourist destination in the world for a family vacation?"
+question = "What is the capital of South Korea?"
 
 answer = ""
 for word in llm(get_prompt(question), stream=True):
@@ -36,7 +36,7 @@ print()
 
 history.append(answer)
 
-question = "Is Seoul a good destination too?"
+question = "And what is the capital of Japan?"
 
 for word in llm(get_prompt(question, history), stream=True):
     print(word, end="", flush=True)
