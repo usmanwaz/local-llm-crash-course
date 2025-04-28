@@ -3,15 +3,6 @@ from typing import List
 import chainlit as cl
 
 
-'''
-If using Llama2 ...
-
-llm = AutoModelForCausalLM.from_pretrained(
-    "TheBloke/Llama-2-7b-Chat-GGUF", model_file="llama-2-7b-chat.Q5_K_M.gguf"
-)
-'''
-
-
 def get_prompt(instruction: str, history: List[str]) -> str:
     system = "You are an AI assistant that gives helpful answers. You answer the question in a short and concise way."
     prompt = f"### System:\n{system}\n\n### User:\n"
@@ -53,31 +44,5 @@ async def on_message(message: cl.Message):
         await msg.stream_token(word)
         response += word
 
-    # response = llm(prompt)
-    # response = f"Hello, you just sent: {message.content}!"
     await msg.update()
     message_history.append(response)
-    # await cl.Message(response).send()
-
-'''
-
-history = []
-
-question = "What is the capital of South Korea?"
-
-answer = ""
-for word in llm(get_prompt(question), stream=True):
-    print(word, end="", flush=True)
-    answer += word
-print()
-
-history.append(answer)
-
-question = "And what is the capital of Japan?"
-
-for word in llm(get_prompt(question, history), stream=True):
-    print(word, end="", flush=True)
-    answer += word
-print()
-
-'''
