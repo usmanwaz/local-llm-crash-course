@@ -35,20 +35,22 @@ llm = AutoModelForCausalLM.from_pretrained(
 async def on_message(message: cl.Message):
     message_history = cl.user_session.get("message_history")
 
+    global llm
+
     msg = cl.Message(content="")
     await msg.send()
 
     if message.content == "use llama2":
         await cl.Message(content="Switch to LLAMA2 successful!").send()
 
-        llm2 = AutoModelForCausalLM.from_pretrained(
+        llm = AutoModelForCausalLM.from_pretrained(
             "TheBloke/Llama-2-7b-Chat-GGUF", model_file="llama-2-7b-chat.Q5_K_M.gguf"
         )
 
     elif message.content == "use orca":
         await cl.Message(content="Switch to ORCA successful!").send()
 
-        llm2 = AutoModelForCausalLM.from_pretrained(
+        llm = AutoModelForCausalLM.from_pretrained(
             "zoltanctoth/orca_mini_3B-GGUF", model_file="orca-mini-3b.q4_0.gguf"
         )
 
@@ -56,7 +58,7 @@ async def on_message(message: cl.Message):
         prompt = get_prompt(message.content, message_history)
         response = ""
 
-        for word in llm2(prompt, stream=True):
+        for word in llm(prompt, stream=True):
             await msg.stream_token(word)
             response += word
 
