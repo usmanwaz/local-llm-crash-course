@@ -19,13 +19,6 @@ def on_chat_start():
     global llm
 
 
-'''
-#If using Orca    
-    llm = AutoModelForCausalLM.from_pretrained(
-        "zoltanctoth/orca_mini_3B-GGUF", model_file="orca-mini-3b.q4_0.gguf"
-'''
-# If using Llama2 ...
-
 llm = AutoModelForCausalLM.from_pretrained(
     "TheBloke/Llama-2-7b-Chat-GGUF", model_file="llama-2-7b-chat.Q5_K_M.gguf"
 )
@@ -40,19 +33,23 @@ async def on_message(message: cl.Message):
     msg = cl.Message(content="")
     await msg.send()
 
-    if message.content == "use llama2":
+    if message.content.lower() == "use llama2":
         await cl.Message(content="Switch to LLAMA2 successful!").send()
 
         llm = AutoModelForCausalLM.from_pretrained(
             "TheBloke/Llama-2-7b-Chat-GGUF", model_file="llama-2-7b-chat.Q5_K_M.gguf"
         )
 
-    elif message.content == "use orca":
+    elif message.content.lower() == "use orca":
         await cl.Message(content="Switch to ORCA successful!").send()
 
         llm = AutoModelForCausalLM.from_pretrained(
             "zoltanctoth/orca_mini_3B-GGUF", model_file="orca-mini-3b.q4_0.gguf"
         )
+
+    elif message.content.lower() == "forget":
+        await cl.Message(content="Uh oh! I have forgotten everything").send()
+        cl.user_session.set("message_history", [])
 
     else:
         prompt = get_prompt(message.content, message_history)
